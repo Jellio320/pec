@@ -1,27 +1,36 @@
-SRC_DIR = src
-OBJ_DIR = obj
-BIN_DIR = bin
+SRCDIR = src
+OBJDIR = obj
+BINDIR = bin
 
-BINS := $(patsubst $(SRC_DIR)/%.c, $(BIN_DIR)/%, $(wildcard $(SRC_DIR)/*.c))
+BINS := echo \
+		true \
+		false 
 
 CC = cc
-CFLAGS = -std=c89 -O2 -g -Wall -Wextra
+CPPFLAGS = -D_POSIX_C_SOURCE=1
+CFLAGS = -std=c89 -O2 -g -Wall -Wextra -ffunction-sections -fdata-sections
 
 LD = $(CC)
 
+ifdef $(POSIXLY_CORRECT)
+CPPFLAGS += -DPOSIXLY_CORRECT
+endif
+
 .PHONY: all clean
-.PRECIOUS: $(OBJ_DIR)/%.o
+.PRECIOUS: $(OBJDIR)/%.o
 
 all: $(BINS)
 
-$(BIN_DIR)/%: $(OBJ_DIR)/%.o | $(BIN_DIR)
+$(BINS): $(BINS:%=$(BINDIR)/%)
+
+$(BINDIR)/%: $(OBJDIR)/%.o $(OBJDIR)/common.o | $(BINDIR)
 	$(LD) -o $@ $^
 
-$(OBJ_DIR)/%.o: $(SRC_DIR)/%.c | $(OBJ_DIR)
-	$(CC) $(CFLAGS) -c -o $@ $<
+$(OBJDIR)/%.o: $(SRCDIR)/%.c | $(OBJDIR)
+	$(CC) $(CPPFLAGS) $(CFLAGS) -c -o $@ $<
 
-$(BIN_DIR) $(OBJ_DIR):
+$(BINDIR) $(OBJDIR):
 	@mkdir -p $@
 
 clean:
-	$(RM) $(BINS) $(OBJ_DIR)/*.o
+	$(RM) $(BINS:%=$(BINDIR)/%) $(OBJDIR)/*.o
