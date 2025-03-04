@@ -4,7 +4,9 @@ BINDIR = bin
 
 BINS := echo \
 		true \
-		false 
+		false \
+		basename \
+		dirname
 
 CC = cc
 CPPFLAGS = -D_POSIX_C_SOURCE=1

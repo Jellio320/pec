@@ -1,5 +1,2 @@
-#include <stdlib.h>
-
-int main(void) {
-    return EXIT_SUCCESS;
-}
+#define RETURN_VALUE 0
+#include "false.c"

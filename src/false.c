@@ -1,5 +1,9 @@
 #include <stdlib.h>
 
+#ifndef RETURN_VALUE
+#define RETURN_VALUE EXIT_FAILURE
+#endif
+
 int main(void) {
-    return EXIT_FAILURE;
+    return RETURN_VALUE;
 }
